@@ -1,5 +1,5 @@
 # OpenCV-Mp4
-This project contains a basic python script to running opencv-python with a mp4 file.
+This project contains a basic python script to run opencv-python with an mp4 file.
 
 ## Previews
 
