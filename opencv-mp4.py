@@ -1,9 +1,9 @@
 import cv2
 import sys
 
-video_capture = cv2.VideoCapture("./dance.mp4")
+video_capture = cv2.VideoCapture("./assets/video/dance.mp4")
 
-faceCascade = cv2.CascadeClassifier("./haarcascade_frontalface_alt.xml")
+faceCascade = cv2.CascadeClassifier("./assets/model/haarcascade_frontalface_alt.xml")
 
 def drawRectagle(frame):
     for (x, y, w, h) in face:
