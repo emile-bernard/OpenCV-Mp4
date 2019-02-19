@@ -11,8 +11,24 @@ This project contains a basic python script to run opencv-python with an mp4 fil
 $ pip install opencv-python
 ```
 
+- Install tkinter
+```
+$ pip install tkinter
+```
+
+- Install pillow
+```
+$ pip install pillow
+```
+
 ## How to run
 - Run
 ```
 $ python ./opencv-mp4
 ```
+
+## Links
+- [Python Patterns - Github](https://github.com/faif/python-patterns)
+- [Python Design Patterns: For Sleek And Fashionable Code](https://www.toptal.com/python/python-design-patterns)
+- [Python Opencv show video in tkinter window](https://solarianprogrammer.com/2018/04/21/python-opencv-show-video-tkinter-window/)
+- [Cumbia dance video](https://pixabay.com/fr/videos/la-cumbia-colombie-paix-joy-8758/)
