@@ -13,6 +13,7 @@ class App:
         self.window.title = "OpenCV mp4"
 
         self.drawMenu()
+        self.drawModelList()
         self.drawCanvas()
         self.drawButton()
 
@@ -31,6 +32,33 @@ class App:
         self.menuButton.menu.add_checkbutton(label = 'Contact', variable = cVar)
         self.menuButton.menu.add_checkbutton(label = 'About', variable = aVar)
         self.menuButton.pack()
+
+    def drawModelList(self):
+        self.listBox = tk.Listbox(self.window)
+        self.listBox.insert(1, "Smile")
+
+        self.listBox.insert(2, "Eye Tree Eye Glasses")
+        self.listBox.insert(3, "Eye")
+        self.listBox.insert(4, "Left Eye 2 Splits")
+        self.listBox.insert(5, "Right Eye 2 Splits")
+
+        self.listBox.insert(6, "Frontal Cat Face Extended")
+        self.listBox.insert(7, "Frontal Cat Face")
+
+        self.listBox.insert(8, "Frontal Face Alt Tree")
+        self.listBox.insert(9, "Frontal Face Alt")
+        self.listBox.insert(10, "Frontal Face Alt 2")
+        self.listBox.insert(11, "Frontal Face Default")
+        self.listBox.insert(12, "Profile Face")
+
+        self.listBox.insert(13, "Full Body")
+        self.listBox.insert(14, "Lower Body")
+        self.listBox.insert(15, "Upper Body")
+
+        self.listBox.insert(16, "Licence Plate Rus 16 Stages")
+        self.listBox.insert(17, "Russian Plate Number")
+
+        self.listBox.pack()
 
     def drawCanvas(self):
         self.canvas = tk.Canvas(self.window, width = self.videoCapture.width, height = self.videoCapture.height)
