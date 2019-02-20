@@ -43,25 +43,10 @@ class App:
     def update(self):
         ret, frame = self.videoCapture.getFrame()
         if ret:
-            self.detectFaces(frame)
+            self.model.detectFaces(frame)
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
             self.canvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
         self.window.after(self.updateDelay, self.update)
-
-    def detectFaces(self, frame):
-        colorSpace = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        detectedObjects = self.model.getClassifier().detectMultiScale(
-            colorSpace,
-            scaleFactor=1.3,
-            minNeighbors=3,
-            minSize=(20, 20),
-            flags=cv2.CASCADE_SCALE_IMAGE
-        )
-        self.drawRectagle(frame, detectedObjects)
-
-    def drawRectagle(self, frame, objects):
-        for (x, y, w, h) in objects:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 5)
 
     def snapshot(self):
         ret, frame = self.videoCapture.getFrame()
@@ -92,7 +77,19 @@ class Model:
     def __init__(self, classifierPath):
         self.classifier = cv2.CascadeClassifier(classifierPath)
 
-    def getClassifier(self):
-        return self.classifier
+    def detectFaces(self, frame):
+        colorSpace = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        detectedObjects = self.classifier.detectMultiScale(
+            colorSpace,
+            scaleFactor=1.3,
+            minNeighbors=3,
+            minSize=(20, 20),
+            flags=cv2.CASCADE_SCALE_IMAGE
+        )
+        self.drawRectagle(frame, detectedObjects)
+
+    def drawRectagle(self, frame, objects):
+        for (x, y, w, h) in objects:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 5)
 
 App()
