@@ -8,7 +8,8 @@ class App:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title = 'Counting Seconds'
-        self.pretrainedFaceClassifier = cv2.CascadeClassifier("./assets/model/haarcascade_frontalface_alt.xml")
+
+        self.model = Model("./assets/model/haarcascade_frontalface_alt.xml");
         self.videoCapture = VideoCapture("./assets/video/cumbia_960x540.mp4")
 
         self.drawMenu()
@@ -40,7 +41,7 @@ class App:
         self.btn.pack(anchor=tk.CENTER, expand=True)
 
     def update(self):
-        ret, frame = self.videoCapture.get_frame()
+        ret, frame = self.videoCapture.getFrame()
         if ret:
             self.detectFaces(frame)
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
@@ -49,7 +50,7 @@ class App:
 
     def detectFaces(self, frame):
         colorSpace = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        detectedObjects = self.pretrainedFaceClassifier.detectMultiScale(
+        detectedObjects = self.model.getClassifier().detectMultiScale(
             colorSpace,
             scaleFactor=1.3,
             minNeighbors=3,
@@ -63,7 +64,7 @@ class App:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 5)
 
     def snapshot(self):
-        ret, frame = self.videoCapture.get_frame()
+        ret, frame = self.videoCapture.getFrame()
         if ret:
             cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
@@ -77,7 +78,7 @@ class VideoCapture:
         if self.videoCapture.isOpened():
             self.videoCapture.release()
 
-    def get_frame(self):
+    def getFrame(self):
         if self.videoCapture.isOpened():
             ret, frame = self.videoCapture.read()
             if ret:
@@ -86,5 +87,12 @@ class VideoCapture:
                 return (ret, None)
         else:
             return (ret, None)
+
+class Model:
+    def __init__(self, classifierPath):
+        self.classifier = cv2.CascadeClassifier(classifierPath)
+
+    def getClassifier(self):
+        return self.classifier
 
 App()
