@@ -6,11 +6,11 @@ import PIL.Image, PIL.ImageTk
 
 class App:
     def __init__(self):
-        self.window = tk.Tk()
-        self.window.title = 'Counting Seconds'
-
-        self.model = Model("./assets/model/haarcascade_frontalface_alt.xml");
+        self.model = Model("./assets/model/haarcascade_frontalface_alt.xml")
         self.videoCapture = VideoCapture("./assets/video/cumbia_960x540.mp4")
+
+        self.window = tk.Tk()
+        self.window.title = "OpenCV mp4"
 
         self.drawMenu()
         self.drawCanvas()
