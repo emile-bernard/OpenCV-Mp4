@@ -12,7 +12,8 @@ class App:
         self.window = tk.Tk()
         self.window.title = "OpenCV mp4"
 
-        self.drawMenu()
+        self.drawClassifierInput()
+        # self.drawMenu()
         self.drawModelList()
         self.drawCanvas()
         self.drawButton()
@@ -21,6 +22,13 @@ class App:
         self.update()
 
         self.window.mainloop()
+
+    def drawClassifierInput(self):
+        tk.Label(self.window, text = "Scale Factor").pack(fill = tk.X)
+        tk.Label(self.window, text = "Min Neighbors").pack(fill = tk.X)
+
+        scaleFactorEntry = tk.Entry(self.window).pack(fill = tk.X)
+        minNeighborsEntry = tk.Entry(self.window).pack(fill = tk.X)
 
     def drawMenu(self):
         self.menuButton = tk.Menubutton(self.window, text = "Menu Button")
@@ -58,7 +66,8 @@ class App:
         self.listBox.insert(16, "Licence Plate Rus 16 Stages")
         self.listBox.insert(17, "Russian Plate Number")
 
-        self.listBox.pack()
+        # self.listBox.pack(fill = tk.X)
+        self.listBox.pack(side = "left", fill = tk.Y)
 
     def drawCanvas(self):
         self.canvas = tk.Canvas(self.window, width = self.videoCapture.width, height = self.videoCapture.height)
