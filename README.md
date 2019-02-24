@@ -4,6 +4,7 @@ This project contains a basic python script to run opencv-python with an mp4 fil
 ## Previews
 
 ![Preview1](./preview/preview1.PNG?raw=true "Preview1")
+![Preview2](./preview/preview2.gif)
 
 ## How to setup
 - Install opencv-python
@@ -34,3 +35,4 @@ $ python ./opencv-mp4
 - [Tkinter layout management](https://www.python-course.eu/tkinter_layout_management.php)
 - [Python gui tkinter](https://www.geeksforgeeks.org/python-gui-tkinter/)
 - [Cumbia dance video](https://pixabay.com/fr/videos/la-cumbia-colombie-paix-joy-8758/)
+- [Fair song video](https://pixabay.com/fr/videos/juste-vacances-dansant-chansons-4843/)

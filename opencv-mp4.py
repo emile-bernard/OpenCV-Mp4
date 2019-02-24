@@ -1,3 +1,4 @@
+import os
 import cv2
 import sys
 import time
@@ -5,89 +6,79 @@ import tkinter as tk
 import PIL.Image, PIL.ImageTk
 
 class App:
+    UPDATE_DELAY = 15
+
     def __init__(self):
-        self.model = Model("./assets/model/haarcascade_frontalface_alt.xml")
-        self.videoCapture = VideoCapture("./assets/video/cumbia_960x540.mp4")
+        self.modelFiles = self.getModelFiles()
+        self.model = Model(self.modelFiles[0][1])
+        self.videoCapture = VideoCapture("./assets/videos/fair_960x540.mp4")
 
         self.window = tk.Tk()
-        self.window.title = "OpenCV mp4"
+        self.window.title("OpenCV mp4")
+        self.window.resizable(0, 0)
 
-        self.drawClassifierInput()
-        # self.drawMenu()
         self.drawModelList()
         self.drawCanvas()
-        self.drawButton()
+        self.drawSnapshotButton()
 
-        self.updateDelay = 15
         self.update()
-
         self.window.mainloop()
 
-    def drawClassifierInput(self):
-        tk.Label(self.window, text = "Scale Factor").pack(fill = tk.X)
-        tk.Label(self.window, text = "Min Neighbors").pack(fill = tk.X)
+    def getModelFiles(self):
+        modelFiles = []
+        for root, dirs, files in os.walk("./assets/models"):
+            for filename in files:
+                modelFileName = filename
+                modelFilePath = os.path.join(root, filename)
+                modelFile = (modelFileName, modelFilePath)
+                modelFiles.append(modelFile)
 
-        scaleFactorEntry = tk.Entry(self.window).pack(fill = tk.X)
-        minNeighborsEntry = tk.Entry(self.window).pack(fill = tk.X)
-
-    def drawMenu(self):
-        self.menuButton = tk.Menubutton(self.window, text = "Menu Button")
-        self.menuButton.grid()
-        self.menuButton.menu = tk.Menu(self.menuButton, tearoff = 0)
-        self.menuButton["menu"] = self.menuButton.menu
-        cVar  = 0
-        aVar = 0
-        self.menuButton.menu.add_checkbutton(label = 'Contact', variable = cVar)
-        self.menuButton.menu.add_checkbutton(label = 'About', variable = aVar)
-        self.menuButton.pack()
+        return modelFiles
 
     def drawModelList(self):
         self.listBox = tk.Listbox(self.window)
-        self.listBox.insert(1, "Smile")
+        self.listBox.config(width = 40)
 
-        self.listBox.insert(2, "Eye Tree Eye Glasses")
-        self.listBox.insert(3, "Eye")
-        self.listBox.insert(4, "Left Eye 2 Splits")
-        self.listBox.insert(5, "Right Eye 2 Splits")
+        for modelFile in self.modelFiles:
+            self.listBox.insert(tk.END, modelFile[0])
 
-        self.listBox.insert(6, "Frontal Cat Face Extended")
-        self.listBox.insert(7, "Frontal Cat Face")
+        self.listBox.bind('<<ListboxSelect>>', self.listBoxSelectionChanged)
 
-        self.listBox.insert(8, "Frontal Face Alt Tree")
-        self.listBox.insert(9, "Frontal Face Alt")
-        self.listBox.insert(10, "Frontal Face Alt 2")
-        self.listBox.insert(11, "Frontal Face Default")
-        self.listBox.insert(12, "Profile Face")
+        self.listBox.select_set(0) #Sets focus on the first item.
+        self.listBox.event_generate("<<ListboxSelect>>")
 
-        self.listBox.insert(13, "Full Body")
-        self.listBox.insert(14, "Lower Body")
-        self.listBox.insert(15, "Upper Body")
-
-        self.listBox.insert(16, "Licence Plate Rus 16 Stages")
-        self.listBox.insert(17, "Russian Plate Number")
-
-        # self.listBox.pack(fill = tk.X)
         self.listBox.pack(side = "left", fill = tk.Y)
+
+    def getSelectedModelName(self):
+        curentSelection = self.listBox.curselection()[0]
+        return self.modelFiles[curentSelection][0]
+
+    def getSelectedModelPath(self):
+        curentSelection = self.listBox.curselection()[0]
+        return self.modelFiles[curentSelection][1]
+
+    def listBoxSelectionChanged(self, *args):
+        self.model = Model(self.getSelectedModelPath())
 
     def drawCanvas(self):
         self.canvas = tk.Canvas(self.window, width = self.videoCapture.width, height = self.videoCapture.height)
         self.canvas.pack()
 
-    def drawButton(self):
-        self.btn = tk.Button(self.window, text="Take a snapshot", width=50, command=self.snapshot)
-        self.btn.pack(anchor=tk.CENTER, expand=True)
+    def drawSnapshotButton(self):
+        self.snapshotButton = tk.Button(self.window, text="Take a snapshot", width=50, command=self.snapshot)
+        self.snapshotButton.pack(anchor=tk.CENTER, expand=True)
 
     def update(self):
-        ret, frame = self.videoCapture.getFrame()
-        if ret:
+        isFrameRead, frame = self.videoCapture.getFrame()
+        if isFrameRead:
             self.model.detectFaces(frame)
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
             self.canvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
-        self.window.after(self.updateDelay, self.update)
+        self.window.after(self.UPDATE_DELAY, self.update)
 
     def snapshot(self):
-        ret, frame = self.videoCapture.getFrame()
-        if ret:
+        isFrameRead, frame = self.videoCapture.getFrame()
+        if isFrameRead:
             cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
 class VideoCapture:
@@ -102,15 +93,20 @@ class VideoCapture:
 
     def getFrame(self):
         if self.videoCapture.isOpened():
-            ret, frame = self.videoCapture.read()
-            if ret:
-                 return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            isFrameRead, frame = self.videoCapture.read()
+            if isFrameRead:
+                 return (isFrameRead, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             else:
-                return (ret, None)
+                return (isFrameRead, None)
         else:
-            return (ret, None)
+            return (isFrameRead, None)
 
 class Model:
+    IMAGE_SCALE_FACTOR = 1.1
+    CANDIDATE_RECTANGLE_MIN_NEIGHBORS = 5
+    OBJECT_MIN_HORIZONTAL_SIZE = 20
+    OBJECT_MIN_VERTICAL_SIZE = 20
+
     def __init__(self, classifierPath):
         self.classifier = cv2.CascadeClassifier(classifierPath)
 
@@ -118,15 +114,47 @@ class Model:
         colorSpace = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         detectedObjects = self.classifier.detectMultiScale(
             colorSpace,
-            scaleFactor=1.3,
-            minNeighbors=3,
-            minSize=(20, 20),
+            scaleFactor = self.IMAGE_SCALE_FACTOR,
+            minNeighbors = self.CANDIDATE_RECTANGLE_MIN_NEIGHBORS,
+            minSize = (self.OBJECT_MIN_HORIZONTAL_SIZE, self.OBJECT_MIN_VERTICAL_SIZE),
             flags=cv2.CASCADE_SCALE_IMAGE
         )
-        self.drawRectagle(frame, detectedObjects)
+        self.drawDetectedObjects(frame, detectedObjects)
 
-    def drawRectagle(self, frame, objects):
+    def drawDetectedObjects(self, frame, objects):
         for (x, y, w, h) in objects:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 5)
+            rectangle = Rectangle(frame, (x, y), (x+w, y+h))
+            rectangle.draw()
+
+            text = Text(frame, "Object", (x, y))
+            text.draw()
+
+class Rectangle:
+    RECTANGLE_COLOR = (0, 255, 0)
+    RECTANGLE_THICKNESS = 1
+
+    def __init__(self, frame, rectangleVertex, rectangleOppositeVertex):
+        self.frame = frame
+        self.rectangleVertex = rectangleVertex
+        self.rectangleOppositeVertex = rectangleOppositeVertex
+        self.draw()
+
+    def draw(self):
+        cv2.rectangle(self.frame, self.rectangleVertex, self.rectangleOppositeVertex, self.RECTANGLE_COLOR, self.RECTANGLE_THICKNESS)
+
+class Text:
+    TEXT_FONT = cv2.FONT_HERSHEY_DUPLEX
+    TEXT_COLOR = (255, 255, 255)
+    TEXT_SCALE = 0.5
+    TEXT_THICKNESS = 1
+
+    def __init__(self, frame, text, position):
+        self.frame = frame
+        self.position = position
+        self.text = text
+        self.draw()
+
+    def draw(self):
+        cv2.putText(self.frame, self.text, self.position, self.TEXT_FONT, self.TEXT_SCALE, self.TEXT_COLOR, self.TEXT_THICKNESS)
 
 App()
