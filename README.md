@@ -25,7 +25,7 @@ $ pip install pillow
 ## How to run
 - Run
 ```
-$ python ./opencv-mp4
+$ python ./app.py
 ```
 
 ## Links
