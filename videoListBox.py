@@ -3,13 +3,13 @@ from videoCapture import VideoCapture
 
 class VideoListBox:
     def __init__(self, parent, videoCapture, videoFiles):
+        self.videoListBox = tk.Listbox(parent)
         self.parent = parent
         self.videoCapture = videoCapture
         self.videoFiles = videoFiles
         self.draw()
 
     def draw(self):
-        self.videoListBox = tk.Listbox(self.parent)
         self.videoListBox.config(width = 30, height = 40)
 
         for videoFile in self.videoFiles:
@@ -31,3 +31,7 @@ class VideoListBox:
             return (True, self.videoFiles[curentSelection][1])
         except:
             return (False, None)
+
+    def getSelectedVideoName(self):
+        curentSelection = self.videoListBox.curselection()[0]
+        return self.videoFiles[curentSelection][0]

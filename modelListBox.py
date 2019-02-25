@@ -31,3 +31,7 @@ class ModelListBox:
             return (True, self.modelFiles[curentSelection][1])
         except:
             return (False, None)
+
+    def getSelectedModelName(self):
+        curentSelection = self.modelListBox.curselection()[0]
+        return self.modelFiles[curentSelection][0]

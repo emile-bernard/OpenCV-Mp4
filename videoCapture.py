@@ -19,3 +19,9 @@ class VideoCapture:
                 return (isFrameRead, None)
         else:
             return (isFrameRead, None)
+
+    def getWidth(self):
+        return self.width
+        
+    def getHeight(self):
+        return self.height

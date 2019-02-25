@@ -32,23 +32,14 @@ class App(tk.Frame):
         self.update()
 
     def getFiles(self, path):
-        modelFiles = []
+        assetFiles = []
         for root, dirs, files in os.walk(path):
             for filename in files:
-                modelFileName = filename
-                modelFilePath = os.path.join(root, filename)
-                modelFile = (modelFileName, modelFilePath)
-                modelFiles.append(modelFile)
-
-        return modelFiles
-
-    def getSelectedModelName(self):
-        curentSelection = self.modelListBox.curselection()[0]
-        return self.modelFiles[curentSelection][0]
-
-    def getSelectedVideoName(self):
-        curentSelection = self.videoListBox.curselection()[0]
-        return self.videoFiles[curentSelection][0]
+                assetFileName = filename
+                assetFilePath = os.path.join(root, filename)
+                assetFile = (assetFileName, assetFilePath)
+                assetFiles.append(assetFile)
+        return assetFiles
 
     def update(self):
         isFrameRead, frame = self.videoCapture.getFrame()
