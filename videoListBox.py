@@ -1,14 +1,17 @@
 import tkinter as tk
+from videoCapture import VideoCapture
 
 class VideoListBox:
-    def __init__(self, parent, videoFiles):
+    def __init__(self, parent, videoCapture, videoFiles):
         self.parent = parent
+        self.videoCapture = videoCapture
         self.videoFiles = videoFiles
         self.draw()
 
     def draw(self):
         self.videoListBox = tk.Listbox(self.parent)
         self.videoListBox.config(width = 30, height = 40)
+
         for videoFile in self.videoFiles:
             self.videoListBox.insert(tk.END, videoFile[0])
 
@@ -18,8 +21,13 @@ class VideoListBox:
         self.videoListBox.pack(side = "left")
 
     def videoListBoxSelectionChanged(self, *args):
-        self.videoCapture = VideoCapture(self.getSelectedVideoPath())
+        isSelectedPath, selectedVideoPath = self.getSelectedVideoPath()
+        if(isSelectedPath):
+            self.videoCapture = VideoCapture(selectedVideoPath)
 
     def getSelectedVideoPath(self):
-        curentSelection = self.videoListBox.curselection()[0]
-        return self.videoFiles[curentSelection][1]
+        try:
+            curentSelection = self.videoListBox.curselection()[0]
+            return (True, self.videoFiles[curentSelection][1])
+        except:
+            return (False, None)

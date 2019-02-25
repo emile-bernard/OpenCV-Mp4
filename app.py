@@ -25,7 +25,7 @@ class App(tk.Frame):
         self.videoCapture = VideoCapture(self.videoFiles[0][1])
 
         self.modelListBox = ModelListBox(self.parent, self.model, self.modelFiles)
-        self.videoListBox = VideoListBox(self.parent, self.videoFiles)
+        self.videoListBox = VideoListBox(self.parent, self.videoCapture, self.videoFiles)
         self.canvas = Canvas(self.parent, self.videoCapture)
         self.paramsForm = ParamsForm(self.parent, self.model)
 
@@ -54,8 +54,8 @@ class App(tk.Frame):
         isFrameRead, frame = self.videoCapture.getFrame()
         if isFrameRead:
             self.model.detectFaces(frame)
-            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-            self.canvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
+            photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.canvas.createImage(0, 0, photo, tk.NW)
         self.parent.after(self.UPDATE_DELAY, self.update)
 
 if __name__ == "__main__":

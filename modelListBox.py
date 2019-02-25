@@ -1,4 +1,5 @@
 import tkinter as tk
+from model import Model
 
 class ModelListBox:
     def __init__(self, parent, model, modelFiles):
@@ -20,8 +21,13 @@ class ModelListBox:
         self.modelListBox.pack(side = "left")
 
     def modelListBoxSelectionChanged(self, *args):
-        self.model = Model(self.getSelectedModelPath())
+        isSelectedPath, selectedModelPath = self.getSelectedModelPath()
+        if(isSelectedPath):
+            self.model = Model(selectedModelPath)
 
     def getSelectedModelPath(self):
-        curentSelection = self.modelListBox.curselection()[0]
-        return self.modelFiles[curentSelection][1]
+        try:
+            curentSelection = self.modelListBox.curselection()[0]
+            return (True, self.modelFiles[curentSelection][1])
+        except:
+            return (False, None)

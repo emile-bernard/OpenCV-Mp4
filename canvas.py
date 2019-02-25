@@ -9,3 +9,6 @@ class Canvas:
     def draw(self):
         self.canvas = tk.Canvas(self.parent, width = self.videoCapture.width, height = self.videoCapture.height)
         self.canvas.pack()
+
+    def createImage(self, x, y, image, anchor):
+        self.canvas.create_image(x, y, image = image, anchor = anchor)
