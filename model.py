@@ -4,20 +4,26 @@ from rectangle import Rectangle
 from text import Text
 
 class Model:
-    IMAGE_SCALE_FACTOR = 1.1
-    CANDIDATE_RECTANGLE_MIN_NEIGHBORS = 5
     OBJECT_MIN_HORIZONTAL_SIZE = 20
     OBJECT_MIN_VERTICAL_SIZE = 20
 
     def __init__(self, classifierPath):
         self.classifier = cv2.CascadeClassifier(classifierPath)
+        self.imageScaleFactor = 1.1
+        self.canditateRectangleMinNeighbors = 5
+
+    def setImageScaleFactor(self, scaleFactor):
+        self.imageScaleFactor = scaleFactor
+
+    def setCanditateRectangleMinNeighbors(self, minNeighbors):
+        self.canditateRectangleMinNeighbors = minNeighbors
 
     def detectFaces(self, frame):
         colorSpace = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         detectedObjects = self.classifier.detectMultiScale(
             colorSpace,
-            scaleFactor = self.IMAGE_SCALE_FACTOR,
-            minNeighbors = self.CANDIDATE_RECTANGLE_MIN_NEIGHBORS,
+            scaleFactor = self.imageScaleFactor,
+            minNeighbors = self.canditateRectangleMinNeighbors,
             minSize = (self.OBJECT_MIN_HORIZONTAL_SIZE, self.OBJECT_MIN_VERTICAL_SIZE),
             flags=cv2.CASCADE_SCALE_IMAGE
         )

@@ -24,7 +24,7 @@ class App:
         self.drawModelList()
         self.drawVideoList()
         self.drawCanvas()
-        self.drawSnapshotButton()
+        self.drawParams()
 
         self.update()
         self.window.mainloop()
@@ -43,29 +43,23 @@ class App:
     def drawModelList(self):
         self.modelListBox = tk.Listbox(self.window)
         self.modelListBox.config(width = 40, height = 40)
-
         for modelFile in self.modelFiles:
             self.modelListBox.insert(tk.END, modelFile[0])
 
         self.modelListBox.bind('<<ListboxSelect>>', self.modelListBoxSelectionChanged)
-
         self.modelListBox.select_set(0) #Sets focus on the first item.
         self.modelListBox.event_generate("<<ListboxSelect>>")
-
         self.modelListBox.pack(side = "left")
 
     def drawVideoList(self):
         self.videoListBox = tk.Listbox(self.window)
         self.videoListBox.config(width = 30, height = 40)
-
         for videoFile in self.videoFiles:
             self.videoListBox.insert(tk.END, videoFile[0])
 
         self.videoListBox.bind('<<ListboxSelect>>', self.videoListBoxSelectionChanged)
-
         self.videoListBox.select_set(0) #Sets focus on the first item.
         self.videoListBox.event_generate("<<ListboxSelect>>")
-
         self.videoListBox.pack(side = "left")
 
     def videoListBoxSelectionChanged(self, *args):
@@ -94,14 +88,28 @@ class App:
         self.canvas = tk.Canvas(self.window, width = self.videoCapture.width, height = self.videoCapture.height)
         self.canvas.pack()
 
-    def drawSnapshotButton(self):
-        self.snapshotButton = tk.Button(self.window, text="Take a snapshot", width=50, command=self.takeSnapshot)
-        self.snapshotButton.pack(anchor=tk.CENTER, expand=True)
+    def drawParams(self):
+        fields = 'Image scale factor', 'Min neighbors'
+        entries = self.makeform(self.window, fields)
+        self.window.bind('<Return>', (lambda event, e=entries: fetch(e)))
+        enterButton = tk.Button(self.window, text='Enter', command=(lambda e=entries: self.enterParams(e)))
+        enterButton.pack(side=tk.LEFT, padx=5, pady=5)
 
-    def takeSnapshot(self):
-        isFrameRead, frame = self.videoCapture.getFrame()
-        if isFrameRead:
-            cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+    def enterParams(self, entries):
+        self.model.setImageScaleFactor(float(entries[0][1].get()))
+        self.model.setCanditateRectangleMinNeighbors(int(entries[1][1].get()))
+
+    def makeform(self, root, fields):
+        entries = []
+        for field in fields:
+            row = tk.Frame(root)
+            label = tk.Label(row, width=15, text=field, anchor='w')
+            entry = tk.Entry(row)
+            row.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
+            label.pack(side=tk.LEFT)
+            entry.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.X)
+            entries.append((field, entry))
+        return entries
 
     def update(self):
         isFrameRead, frame = self.videoCapture.getFrame()
