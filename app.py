@@ -12,24 +12,26 @@ class App:
     UPDATE_DELAY = 15
 
     def __init__(self):
-        self.modelFiles = self.getModelFiles()
+        self.modelFiles = self.getFiles("./assets/models")
         self.model = Model(self.modelFiles[0][1])
-        self.videoCapture = VideoCapture("./assets/videos/fair_960x540.mp4")
+        self.videoFiles = self.getFiles("./assets/videos")
+        self.videoCapture = VideoCapture(self.videoFiles[0][1])
 
         self.window = tk.Tk()
         self.window.title("OpenCV mp4")
         self.window.resizable(0, 0)
 
         self.drawModelList()
+        self.drawVideoList()
         self.drawCanvas()
         self.drawSnapshotButton()
 
         self.update()
         self.window.mainloop()
 
-    def getModelFiles(self):
+    def getFiles(self, path):
         modelFiles = []
-        for root, dirs, files in os.walk("./assets/models"):
+        for root, dirs, files in os.walk(path):
             for filename in files:
                 modelFileName = filename
                 modelFilePath = os.path.join(root, filename)
@@ -39,28 +41,53 @@ class App:
         return modelFiles
 
     def drawModelList(self):
-        self.listBox = tk.Listbox(self.window)
-        self.listBox.config(width = 40)
+        self.modelListBox = tk.Listbox(self.window)
+        self.modelListBox.config(width = 40, height = 40)
 
         for modelFile in self.modelFiles:
-            self.listBox.insert(tk.END, modelFile[0])
+            self.modelListBox.insert(tk.END, modelFile[0])
 
-        self.listBox.bind('<<ListboxSelect>>', self.listBoxSelectionChanged)
+        self.modelListBox.bind('<<ListboxSelect>>', self.modelListBoxSelectionChanged)
 
-        self.listBox.select_set(0) #Sets focus on the first item.
-        self.listBox.event_generate("<<ListboxSelect>>")
+        self.modelListBox.select_set(0) #Sets focus on the first item.
+        self.modelListBox.event_generate("<<ListboxSelect>>")
 
-        self.listBox.pack(side = "left", fill = tk.Y)
+        self.modelListBox.pack(side = "left")
+
+    def drawVideoList(self):
+        self.videoListBox = tk.Listbox(self.window)
+        self.videoListBox.config(width = 30, height = 40)
+
+        for videoFile in self.videoFiles:
+            self.videoListBox.insert(tk.END, videoFile[0])
+
+        self.videoListBox.bind('<<ListboxSelect>>', self.videoListBoxSelectionChanged)
+
+        self.videoListBox.select_set(0) #Sets focus on the first item.
+        self.videoListBox.event_generate("<<ListboxSelect>>")
+
+        self.videoListBox.pack(side = "left")
+
+    def videoListBoxSelectionChanged(self, *args):
+        self.videoCapture = VideoCapture(self.getSelectedVideoPath())
 
     def getSelectedModelName(self):
-        curentSelection = self.listBox.curselection()[0]
+        curentSelection = self.modelListBox.curselection()[0]
         return self.modelFiles[curentSelection][0]
 
     def getSelectedModelPath(self):
-        curentSelection = self.listBox.curselection()[0]
+        curentSelection = self.modelListBox.curselection()[0]
         return self.modelFiles[curentSelection][1]
 
-    def listBoxSelectionChanged(self, *args):
+    def getSelectedVideoName(self):
+        curentSelection = self.videoListBox.curselection()[0]
+        return self.videoFiles[curentSelection][0]
+
+    def getSelectedVideoPath(self):
+        curentSelection = self.videoListBox.curselection()[0]
+        return self.videoFiles[curentSelection][1]
+
+    def modelListBoxSelectionChanged(self, *args):
         self.model = Model(self.getSelectedModelPath())
 
     def drawCanvas(self):
@@ -68,8 +95,13 @@ class App:
         self.canvas.pack()
 
     def drawSnapshotButton(self):
-        self.snapshotButton = tk.Button(self.window, text="Take a snapshot", width=50, command=self.snapshot)
+        self.snapshotButton = tk.Button(self.window, text="Take a snapshot", width=50, command=self.takeSnapshot)
         self.snapshotButton.pack(anchor=tk.CENTER, expand=True)
+
+    def takeSnapshot(self):
+        isFrameRead, frame = self.videoCapture.getFrame()
+        if isFrameRead:
+            cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
     def update(self):
         isFrameRead, frame = self.videoCapture.getFrame()
@@ -78,10 +110,5 @@ class App:
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
             self.canvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
         self.window.after(self.UPDATE_DELAY, self.update)
-
-    def snapshot(self):
-        isFrameRead, frame = self.videoCapture.getFrame()
-        if isFrameRead:
-            cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
 App()
