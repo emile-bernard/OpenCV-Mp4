@@ -45,8 +45,8 @@ class App(tk.Frame):
         isFrameRead, frame = self.videoCapture.getFrame()
         if isFrameRead:
             self.model.detectFaces(frame)
-            photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-            self.canvas.createImage(0, 0, photo, tk.NW)
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.canvas.createImage(0, 0, self.photo, tk.NW)
         self.parent.after(self.UPDATE_DELAY, self.update)
 
 if __name__ == "__main__":

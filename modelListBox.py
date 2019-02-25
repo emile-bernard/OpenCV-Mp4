@@ -2,15 +2,17 @@ import tkinter as tk
 from model import Model
 
 class ModelListBox:
+    LISTBOX_WIDTH = 40
+    LISTBOX_HEIGHT = 40
+
     def __init__(self, parent, model, modelFiles):
-        self.parent = parent
+        self.modelListBox = tk.Listbox(parent)
         self.model = model
         self.modelFiles = modelFiles
         self.draw()
 
     def draw(self):
-        self.modelListBox = tk.Listbox(self.parent)
-        self.modelListBox.config(width = 40, height = 40)
+        self.modelListBox.config(width = self.LISTBOX_WIDTH, height = self.LISTBOX_HEIGHT)
 
         for modelFile in self.modelFiles:
             self.modelListBox.insert(tk.END, modelFile[0])
@@ -23,7 +25,7 @@ class ModelListBox:
     def modelListBoxSelectionChanged(self, *args):
         isSelectedPath, selectedModelPath = self.getSelectedModelPath()
         if(isSelectedPath):
-            self.model = Model(selectedModelPath)
+            self.model.setModelClassifierPath(selectedModelPath)
 
     def getSelectedModelPath(self):
         try:

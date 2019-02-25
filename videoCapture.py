@@ -22,6 +22,9 @@ class VideoCapture:
 
     def getWidth(self):
         return self.width
-        
+
     def getHeight(self):
         return self.height
+
+    def setVideoPath(self, videoPath):
+        self.videoCapture = cv2.VideoCapture(videoPath)

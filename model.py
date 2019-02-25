@@ -33,6 +33,8 @@ class Model:
         for (x, y, w, h) in objects:
             rectangle = Rectangle(frame, (x, y), (x+w, y+h))
             rectangle.draw()
-
             text = Text(frame, "Object", (x, y))
             text.draw()
+
+    def setModelClassifierPath(self, modelClassifierPath):
+        self.classifier = cv2.CascadeClassifier(modelClassifierPath)
