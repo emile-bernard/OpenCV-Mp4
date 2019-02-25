@@ -22,6 +22,12 @@ $ pip install tkinter
 $ pip install pillow
 ```
 
+## How to test
+- Run
+```
+$ python ./tests.py
+```
+
 ## How to run
 - Run
 ```
