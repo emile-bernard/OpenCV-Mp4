@@ -14,6 +14,8 @@ Here are some Haar-Features types:
 
 ![haar_features_types](./documentation/haar_features_types.jpg?raw=true"haar_features_types")
 
+Basic line features looks like this:
+
 ![haar_features](./documentation/haar_features.png?raw=true"haar_features")
 
 Numericaly, it looks like this:
