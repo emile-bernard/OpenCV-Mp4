@@ -18,7 +18,7 @@ class Model:
     def setCanditateRectangleMinNeighbors(self, minNeighbors):
         self.canditateRectangleMinNeighbors = minNeighbors
 
-    def detectFaces(self, frame):
+    def detectObjects(self, frame):
         colorSpace = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         detectedObjects = self.classifier.detectMultiScale(
             colorSpace,

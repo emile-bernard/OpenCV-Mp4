@@ -2,12 +2,10 @@
 This project contains a basic python script to run opencv-python with an mp4 file.
 
 ## Previews
-
 ![Preview1](./preview/preview1.PNG?raw=true "Preview1")
 ![Preview2](./preview/preview2.gif)
 
 ## How it work's
-
 Haar-Features are good at detecting edges and lines, this makes it effective in object detection techniques. Also, Haar-based classifiers typically involve less computations so it has a higher execution speed.
 
 Here are some Haar-Features types:
@@ -57,6 +55,7 @@ $ python ./app.py
 ## Links
 - [Python Patterns - Github](https://github.com/faif/python-patterns)
 - [Python Design Patterns: For Sleek And Fashionable Code](https://www.toptal.com/python/python-design-patterns)
+- [Python Tkinter](https://www.javatpoint.com/python-tkinter)
 - [Python Opencv show video in tkinter window](https://solarianprogrammer.com/2018/04/21/python-opencv-show-video-tkinter-window/)
 - [Tkinter layout management](https://www.python-course.eu/tkinter_layout_management.php)
 - [Python gui tkinter](https://www.geeksforgeeks.org/python-gui-tkinter/)
