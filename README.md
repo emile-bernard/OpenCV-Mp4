@@ -22,7 +22,7 @@ Numericaly, it looks like this:
 
 ![numerical_haar_features](./documentation/numerical_haar_features.png?raw=true"numerical_haar_features")
 
-Haar-feature would be able to detect eyes on a face because the eyes are an area that is dark on top and brighter underneath).
+Haar-feature would be able to detect eyes on a face because the eyes are an area that is dark on top and brighter underneath):
 
 ![haar](./documentation/haar.png?raw=true"haar")
 
