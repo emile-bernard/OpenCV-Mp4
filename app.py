@@ -1,3 +1,4 @@
+import re
 import os
 import cv2
 import sys
@@ -19,9 +20,9 @@ class App(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
 
-        self.modelFiles = self.getFiles("./assets/models")
+        self.modelFiles = self.getModelFiles("./assets/models")
         self.model = Model(self.modelFiles[0][1])
-        self.videoFiles = self.getFiles("./assets/videos")
+        self.videoFiles = self.getVideoFiles("./assets/videos")
         self.videoCapture = VideoCapture(self.videoFiles[0][1])
 
         self.modelListBox = ModelListBox(self.parent, self.model, self.modelFiles)
@@ -31,7 +32,17 @@ class App(tk.Frame):
 
         self.update()
 
-    def getFiles(self, path):
+    def getModelFiles(self, path):
+        assetFiles = []
+        for root, dirs, files in os.walk(path):
+            for filename in files:
+                assetFileName = re.search(r'haarcascade_(.*?).xml', filename).group(1)
+                assetFilePath = os.path.join(root, filename)
+                assetFile = (assetFileName, assetFilePath)
+                assetFiles.append(assetFile)
+        return assetFiles
+
+    def getVideoFiles(self, path):
         assetFiles = []
         for root, dirs, files in os.walk(path):
             for filename in files:
