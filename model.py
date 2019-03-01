@@ -12,6 +12,12 @@ class Model:
         self.imageScaleFactor = 1.1
         self.canditateRectangleMinNeighbors = 5
 
+    def getImageScaleFactor(self):
+        return self.imageScaleFactor
+
+    def getCanditateRectangleMinNeighbors(self):
+        return self.canditateRectangleMinNeighbors
+
     def setImageScaleFactor(self, scaleFactor):
         self.imageScaleFactor = scaleFactor
 

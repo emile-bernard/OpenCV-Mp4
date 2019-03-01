@@ -8,7 +8,7 @@ import PIL.Image, PIL.ImageTk
 
 from model import Model
 from videoCapture import VideoCapture
-from modelListBox import ModelListBoxg
+from modelListBox import ModelListBox
 from videoListBox import VideoListBox
 from canvas import Canvas
 from paramsForm import ParamsForm
